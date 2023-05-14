@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elzix\Yii2\Sentry;
+namespace elzix\Yii2\Sentry;
 
 use Sentry\Breadcrumb;
 use Sentry\ClientBuilder;

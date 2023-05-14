@@ -1,6 +1,6 @@
 {
   "name": "elzix/yii2-sentry",
-  "description": "Yii2 integration for Sentry",
+  "description": "Yii2 integration for Sentry (SDK v3)",
   "keywords": [
     "logging",
     "errors",
@@ -14,7 +14,7 @@
   "authors": [
     {
       "name": "Erix Kivuti",
-      "email": "i@erixkivuti.men"
+      "email": "info@contemplate.me.ke"
     }
   ],
   "config": {
@@ -34,7 +34,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Elzix\\Yii2\\Sentry\\": "src/"
+      "elzix\\Yii2\\Sentry\\": "src/"
     }
   },
   "repositories": [
