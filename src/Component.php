@@ -99,8 +99,8 @@ class Component extends \yii\base\Component implements BootstrapInterface
     /** @var ClientBuilder $builder */
     $builder = \Yii::$container->get(ClientBuilder::class, [$options]);
 
-    $builder->setSdkIdentifier( \Yii::$app->id );
-    $builder->setSdkVersion( \Yii::$app->version ?? '1.0' );
+    $builder->setSdkIdentifier( 'sentry.php.yii2' );
+    $builder->setSdkVersion( '1.0.1' );
 
     $this->hub = new Hub( $this->client = $builder->getClient() );
 
