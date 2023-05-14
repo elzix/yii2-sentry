@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace elzix\Yii2\Sentry;
+namespace Elzix\Yii2\Sentry;
 
 use Sentry\Event;
 use Sentry\Integration\IntegrationInterface;

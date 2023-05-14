@@ -2,7 +2,7 @@
 
 Yii2 integration for [Sentry](https://getsentry.com/) using Sentry PHP SDK v3.
 
-Inspired by [Olegtsvetkov's Yii2 Sentry v2](https://github.com/olegtsvetkov/yii2-sentry) package.
+A copy of [Olegtsvetkov's Yii2 Sentry v2](https://github.com/olegtsvetkov/yii2-sentry) package, with minor changes.
 
 ## Installation
 
@@ -36,14 +36,14 @@ return [
 
   'components' => [
     'sentry' => [
-      'class' => elzix\Yii2\Sentry\Component::class,
+      'class' => Elzix\Yii2\Sentry\Component::class,
       'dsn' => 'https://abcdefghijklmnopqrstuvwxyz123456@sentry.io/0000000',
     ],
 
     'log' => [
       'targets' => [
         [
-          'class' => elzix\Yii2\Sentry\LogTarget::class,
+          'class' => Elzix\Yii2\Sentry\LogTarget::class,
           'levels' => ['error', 'warning'],
           'except' => [
             'yii\web\HttpException:40*',
@@ -101,11 +101,11 @@ Example of component configuration with a complete list of PII-related settings:
 <?php
 
 [
-  'class' => elzix\Yii2\Sentry\Component::class,
+  'class' => Elzix\Yii2\Sentry\Component::class,
   'dsn' => 'https://abcdefghijklmnopqrstuvwxyz123456:abcdefghijklmnopqrstuvwxyz123456@sentry.io/0000000',
   'integrations' => [
     [
-      'class' => elzix\Yii2\Sentry\Integration::class,
+      'class' => Elzix\Yii2\Sentry\Integration::class,
       // Headers that should not be send to Sentry at all
       'stripHeaders' => ['cookie', 'set-cookie'],
       // Headers which values should be filtered before sending to Sentry
