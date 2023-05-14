@@ -8,6 +8,7 @@ use Sentry\ClientBuilder;
 use Sentry\Integration\ErrorListenerIntegration;
 use Sentry\Options;
 use Sentry\SentrySdk;
+use Sentry\State\Hub;
 use Sentry\State\HubInterface;
 use Sentry\State\Scope;
 use yii\base\ActionEvent;
@@ -20,8 +21,18 @@ use yii\web\UserEvent;
 
 class Component extends \yii\base\Component implements BootstrapInterface
 {
+
+	/**
+	 * Holds an instance to the Sentry client.
+	 *
+	 * @var \Sentry\ClientInterface
+	 */
+	protected $client;
+
   /**
-   * @var string Sentry client key.
+   * Holds the last DSN which was used to initialize the Sentry client.
+	 *
+   * @var string.
    */
   public $dsn;
   /**
@@ -33,7 +44,7 @@ class Component extends \yii\base\Component implements BootstrapInterface
    */
   public $integrations = [
     Integration::class,
-    ErrorListenerIntegration::class,
+    // ErrorListenerIntegration::class,
   ];
   /**
    * @var string
@@ -45,6 +56,9 @@ class Component extends \yii\base\Component implements BootstrapInterface
    */
   protected $hub;
 
+  /**
+   * @inheritDoc
+   */
   public function init()
   {
     parent::init();
@@ -58,7 +72,7 @@ class Component extends \yii\base\Component implements BootstrapInterface
       'prefixes' => [
         $basePath,
       ],
-      'project_root' => $basePath,
+      // 'project_root' => $basePath,
       'in_app_exclude' => [
         $basePath . '/vendor/',
       ],
@@ -69,6 +83,7 @@ class Component extends \yii\base\Component implements BootstrapInterface
       // to report duplication when handling any exception, that is supposed to be handled by Yii.
       'default_integrations' => false,
     ], $this->sentrySettings));
+
 
     $integrations = [];
     foreach ($this->integrations as $item) {
@@ -84,15 +99,34 @@ class Component extends \yii\base\Component implements BootstrapInterface
     /** @var ClientBuilder $builder */
     $builder = \Yii::$container->get(ClientBuilder::class, [$options]);
 
-		$this->hub = SentrySdk::getCurrentHub();
+    $builder->setSdkIdentifier( \Yii::$app->id );
+    $builder->setSdkVersion( \Yii::$app->version ?? '1.0' );
 
-		$this->hub->configureScope( function ( Scope $scope ) {
-			foreach ( $this->get_default_tags() as $tag => $value ) {
-				$scope->setTag( $tag, $value );
-			}
-		} );
+    $this->hub = new Hub( $this->client = $builder->getClient() );
 
-		SentrySdk::setCurrentHub( $this->hub );
+    $this->hub->configureScope( function ( Scope $scope ) {
+      foreach ( $this->get_default_tags() as $tag => $value ) {
+        $scope->setTag( $tag, $value );
+      }
+    } );
+
+    SentrySdk::setCurrentHub( $this->hub );
+  }
+
+  /**
+   * Get the default tags.
+   *
+   * @return array
+   */
+  public function get_default_tags(): array {
+
+    /** @noinspection IssetArgumentExistenceInspection */
+    $tags = [
+      'Yii2' => \Yii::getVersion() ?? 'unknown',
+      'language' => \Yii::$app->language ?? 'unknown',
+    ];
+
+    return $tags;
   }
 
   /**
